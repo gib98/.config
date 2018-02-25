@@ -1,0 +1,9 @@
+#!/usr/bin/env python3
+import json
+try:
+    with open("/home/gibran/.config/Google Play Music Desktop Player/json_store/playback.json") as f:
+        a = json.loads(f.read())
+
+    print(a["song"]["title"] + " by " + a["song"]["artist"])
+except:
+    print("Unknown")

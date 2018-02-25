@@ -1,0 +1,16 @@
+#! /usr/bin/env python3
+
+from subprocess import run, PIPE
+data = run(['wicd-cli','-i'], stdout = PIPE, stderr = PIPE)
+data = data.stdout.decode('utf-8')
+try:
+    i1 = data.index(' to ') + 4
+    i2 = data.index(' at ',i1)
+    o1 = data[i1:i2]
+
+    i1 = data.index(' at ') + 4
+    i2 = data.index('%',i1) + 1
+    o2 = (data[i1:i2])
+    print(o1 + '  ' + o2)
+except:
+    print('Not Connected')
