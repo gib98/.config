@@ -31,7 +31,7 @@ padding-right = 2
 
 modules-left = i3
 modules-center = gpmdp
-modules-right = bitcoin pavolume backlight battery date network
+modules-right = volume backlight battery date network
 
 separator = "|"
 
@@ -50,8 +50,11 @@ label-charging = Charging %percentage%%
 label-full = Fully charged
 
 
-format-charging = <animation-charging> <label-charging>
-format-discharging = <ramp-capacity> <label-discharging>
+format-charging = <label-charging>
+format-discharging = <label-discharging>
+
+label-discharging = BAT: %percentage%%
+
 ramp-capacity-0 = 
 ramp-capacity-1 = 
 ramp-capacity-2 = 
@@ -271,7 +274,7 @@ udspeed-minwidth = 5
 ; Default: false
 accumulate-stats = true
 
-format-connected = <ramp-signal> <label-connected>
+format-connected = <label-connected>
 
 ; Available tags:
 ;   <label-disconnected> (default)
@@ -292,7 +295,7 @@ format-packetloss = <animation-packetloss> <label-connected>
 ;   %downspeed% [wireless+wired]
 ;   %linkspeed% [wired]
 ; Default: %ifname% %local_ip%
-label-connected = %essid% %downspeed:9%
+label-connected =%signal% %essid%
 
 
 ; Available tokens:
@@ -327,35 +330,90 @@ animation-packetloss-1-foreground = #000000
 ; Framerate in milliseconds
 animation-packetloss-framerate = 500
 
-[module/net]
-type = custom/script
-interval = 5
-format = <label>
-exec = ~/.config/polybar/net
-click-left = exec wicd-gtk &
 
 [module/backlight]
-type = internal/xbacklight
+type = internal/backlight
 
-; Available tags:
-;   <label> (default)
-;   <ramp>
-;   <bar>
-format = <label> <ramp>
+; Use the following command to list available cards:
+; $ ls -1 /sys/class/backlight/
+card = intel_backlight
 
-; Available tokens:
-;   %percentage% (default)
-label = %percentage%%
 
-; Only applies if <ramp> is used
-ramp-0 = 🌕
-ramp-1 = 🌔
-ramp-2 = 🌓
-ramp-3 = 🌒
-ramp-4 = 🌑
 
 ; Only applies if <bar> is used
 bar-width = 10
 bar-indicator = |
 bar-fill = ─
-bar-empty = ─
+bar-empty = ─\
+
+
+; Available tags:
+;   <label> (default)
+;   <ramp>
+;   <bar>
+format = <label>
+
+; Available tokens:
+;   %percentage% (default)
+label = BR: %percentage%%
+
+
+
+
+
+[module/volume]
+type = internal/volume
+
+; Soundcard to be used
+; Usually in the format hw:#
+master-soundcard = default
+speaker-soundcard = default
+headphone-soundcard = default
+
+; Name of the master mixer
+; Default: Master
+master-mixer = Master
+
+; Optionally define speaker and headphone mixers
+; Use the following command to list available mixer controls:
+; $ amixer scontrols | sed -nr "s/.*'([[:alnum:]]+)'.*/\1/p"
+; Default: none
+speaker-mixer = Speaker
+; Default: none
+headphone-mixer = Headphone
+
+; NOTE: This is required if headphone_mixer is defined
+; Use the following command to list available device controls
+; $ amixer controls | sed -r "/CARD/\!d; s/.*=([0-9]+).*name='([^']+)'.*/printf '%3.0f: %s\n' '\1' '\2'/e" | sort
+; Default: none
+headphone-id = 9
+
+; Use volume mapping (similar to amixer -M and alsamixer), where the increase in volume is linear to the ear
+; Default: false
+mapped = false
+
+; Available tags:
+;   <label-volume> (default)
+;   <ramp-volume>
+;   <bar-volume>
+format-volume = <label-volume>
+
+; Available tags:
+;   <label-muted> (default)
+;   <ramp-volume>
+;   <bar-volume>
+format-muted = <label-muted>
+
+; Available tokens:
+;   %percentage% (default)
+label-volume = V: %percentage%%
+
+; Available tokens:
+;   %percentage% (default)
+label-muted = muted
+label-muted-foreground = #66
+
+; Only applies if <ramp-volume> is used
+ramp-volume-0 = 🔈
+ramp-volume-1 = 🔉
+ramp-volume-2 = 🔊

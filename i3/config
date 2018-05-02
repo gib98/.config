@@ -2,20 +2,21 @@ for_window [class="^.*"] border pixel 0
 gaps inner 10
 gaps outer 0
 smart_gaps on
-exec --no-startup-id synclient VertScrollDelta=-111
-exec --no-startup-id synclient TapButton1=1
-exec --no-startup-id synclient HorizTwoFingerScroll=1
-exec --no-startup-id synclient HorizScrollDelta=-114
+exec --no-startup-id xinput set-prop 12 294 1
+exec --no-startup-id xinput set-prop 12 276 1
+
 exec --no-startup-id feh --bg-scale /usr/share/pixmaps/Wallpapers/bg.jpg
 exec --no-startup-id polybar bar
 
 exec --no-startup-id redshift
-exec --no-startup-id tlp start
-
-exec --no-startup-id wal -lR
 
 
-exec --no-sp0
+exec --no-startup-id wal -R
+
+
+
+
+
 
 
 # Set colors from Xresources
@@ -44,6 +45,9 @@ client.background       $bg
 bindsym $mod+d exec rofi -show run
 bindsym $mod+Shift+d exec rofi -show window
 
+bindsym Shift+Print --release exec maim -s | xclip -selection clipboard -t image/png
+bindsym Print --release exec maim -s > /tmp/screenshot.png
+
 
 exec --no-startup-id polybar example
 exec --no-startup-id compton -b
@@ -53,16 +57,14 @@ bindsym XF86AudioMute exec amixer -q set Master toggle
 
 bindsym $mod+p exec --no-startup-id i3lock -f
 
-bindsym --release Print exec "scrot -m '/home/gibran/Pictures/cd ~shots/%s_%H%M_%d.%m.%Y_$wx$h.png'"
-bindsym --release Shift+Print exec "scrot -s '/home/gibran/Pictures/shots/%s_%H%M_%d%m%Y_$wx$h.png'"
-bindsym --release $mod+Shift+Print exec "scrot -u -d 4 '/home/gibran/Pictures/shots/%s_%H%M_%d%m%Y_$wx$h.png'"
-bindsym XF86MonBrightnessUp exec xbacklight -inc 10 # increase screen brightness
-bindsym XF86MonBrightnessDown exec xbacklight -dec 10 # decrease screen brightness
 
-bindsym $mod+Alt+Up exec playerctl play-pause
-bindsym $mod+Alt+Down exec playerctl pause
-bindsym $mod+Alt+Right exec playerctl next
-bindsym $mod+Alt+Left exec playerctl previous
+bindsym XF86MonBrightnessUp exec light -A 10 # increase screen brightness
+bindsym XF86MonBrightnessDown exec light -U 10 # decrease screen brightness
+
+bindsym --release $mod+Control+Up  exec playerctl play-pause
+bindsym --release $mod+Control+Down exec playerctl pause
+bindsym --release $mod+Control+Right exec playerctl next
+bindsym --release $mod+Control+Left exec playerctl previous
 
 for_window [class="^.*"] border pixel 1
 hide_edge_borders smart
@@ -103,6 +105,9 @@ bindsym $mod+Return exec termite
 
 # kill focused window
 bindsym $mod+Shift+q kill
+
+# xkill
+bindsym --release $mod+Shift+x exec xkill
 
 
 # There also is the (new) i3-dmenu-desktop which only displays applications
